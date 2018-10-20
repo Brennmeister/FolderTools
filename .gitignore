@@ -103,5 +103,9 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+# pycharm stuff
+.idea/
+bin/.idea/
+
 # files not for version control 
 xls2ppt_main.py
