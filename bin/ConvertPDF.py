@@ -20,7 +20,7 @@ class ConvertPDF(FolderTool):
         # get the folder paths and create not existing output-folders
         self.init_folders()
         # == Additional Properties ===========================================================
-        self.path_qpdf = kwargs.get('path_qpdf', r'C:\PortableApps\cygwinx86\bin\qpdf.exe')
+        self.path_qpdf = kwargs.get('path_qpdf')
         # Create a list to queue all the file-changes
         self.file_queue = list()
         # create a timer object
@@ -28,6 +28,10 @@ class ConvertPDF(FolderTool):
         pdf_action = kwargs.get('pdf_action', 'merge')
         if pdf_action=='merge':
             self.execAction = self.mergePDF
+            # Set Observer and Handler Actions
+            self.in_handler.set_action_on_create(self.collectChanges)
+        elif pdf_action=='split':
+            self.execAction = self.splitPDF
             # Set Observer and Handler Actions
             self.in_handler.set_action_on_create(self.collectChanges)
         elif pdf_action=='decrypt':
@@ -120,7 +124,41 @@ class ConvertPDF(FolderTool):
                 # subprocess.call(cmd_str)
                 # Multiple conversions at the same time
                 proc = subprocess.Popen(cmd_str, shell=False, stdin=None, stdout=None, stderr=None,
+
                                         close_fds=True)
+    def splitPDF(self, file_list=[]):
+        """
+        Splits the given pdfs in file_list into several pdfs containing a single page each
+        :param file_list: list of file paths
+        :return:
+        """
+        if file_list is None:
+            file_list = [name for name in os.listdir(self.main_folder_path) if
+                         os.path.isfile(os.path.join(self.main_folder_path, name))]
+        cmd_in_parms = list()
+        for fn in file_list:
+            if any([re.match(x, fn, re.IGNORECASE) for x in self.file_pattern]) \
+                    and not any([re.match(x, ntpath.basename(fn)) for x in self.ignore_files]):
+                cmd_in_parms.append('"{:s}"'.format(fn))
+
+        out_folder = os.path.join(self.out_folder_path)
+        if not os.path.isdir(out_folder):
+            os.makedirs(out_folder)
+
+        fout = os.path.join(out_folder, ntpath.splitext(ntpath.basename(fn))[0] + "_page%d.pdf")
+        # Create Command String
+        cmd_str = '"' + self.path_qpdf + '" --split-pages ' + ' '.join(cmd_in_parms) + ' "' + fout + '"'
+
+        # Add Out-File to ignore list. otherwise it would trigger new action
+        self.ignore_files.append(ntpath.basename(fout))
+        self.ignore_files_last_add = time.time()
+
+        print('Splitting with command {:s}'.format(cmd_str))
+        # One conversion at a time
+        # subprocess.call(cmd_str)
+        # Multiple conversions at the same time
+        proc = subprocess.Popen(cmd_str, shell=False, stdin=None, stdout=None, stderr=None,
+                                close_fds=True)
 
 if __name__ == '__main__':
     args = sys.argv[1:]

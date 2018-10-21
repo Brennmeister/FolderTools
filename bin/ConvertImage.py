@@ -19,7 +19,7 @@ class ConvertImage(FolderTool):
         # get the folder paths and create not existing output-folders
         self.init_folders()
         # == Additional Properties ===========================================================
-        self.path_convert = kwargs.get('path_convert', r'C:\PortableApps\cygwinx86\bin\convert.exe')
+        self.path_convert = kwargs.get('path_convert')
         self.param_set = list()
         if kwargs.get('preset_parms') == 'pdf':
             self.set_pdf_parms()
@@ -27,6 +27,8 @@ class ConvertImage(FolderTool):
             self.set_thumb_parms()
         elif kwargs.get('preset_parms') == 'pdf2png':
              self.set_pdf2png_parms()
+        elif kwargs.get('preset_parms') == 'quality70':
+            self.set_quality70_parms()
         # Set Observer and Handler Actions
         self.in_handler.set_action_on_create(self.convert_and_keep_inputfile)
         self.in_observer.schedule(self.in_handler, path=self.main_folder_path, recursive=False)
@@ -68,6 +70,13 @@ class ConvertImage(FolderTool):
             'outExt': '.jpg',
              'inparms': [],
              'outparms': ['-quality 70', '-geometry 500x']})
+    def set_quality70_parms(self):
+        self.param_set = list()
+        self.param_set.append(
+            {  'out': 'Q70',
+            'outExt': '.jpg',
+             'inparms': [],
+             'outparms': ['-quality 70']})
     def set_pdf2png_parms(self):
         self.param_set = list()
         self.param_set.append(
