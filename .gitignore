@@ -14,8 +14,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
 parts/
 sdist/
 var/
@@ -109,3 +107,19 @@ bin/.idea/
 
 # files not for version control 
 xls2ppt_main.py
+
+# The folder created by the tool
+DOC2PDF
+file-rename-and-number
+img-add-annotation
+img-add-dateprefix-Y-m
+img-add-dateprefix-Y-m-d
+img-exif-doublette
+img-to-pdf
+img-to-Q70
+img-to-thumb
+pdf-decrypt
+pdf-merge
+pdf-split
+pdf-to-png
+PPT2PDF
