@@ -106,7 +106,7 @@ venv.bak/
 bin/.idea/
 
 # files not for version control 
-xls2ppt_main.py
+xls2ppt_itk.py
 
 # The folder created by the tool
 DOC2PDF
