@@ -111,31 +111,31 @@ class MyPDFWriter:
         fin.close()
 
 
+if __name__ == '__main__':
 
+    mpdf = MyPDFWriter()
+    im_list = list()
+    im_files = list()
 
-mpdf = MyPDFWriter()
-im_list = list()
-im_files = list()
+    tmp_file = tempfile.NamedTemporaryFile(suffix='.pdf', delete=False).name
+    # mpdf.add_image(r'C:\Users\mpeter\Desktop\avery.pdf')
+    # mpdf.add_image(r'C:\Users\mpeter\Desktop\b.pdf')
+    first_run=True
+    offset_num = 19081
+    for ii in range(0+offset_num, 80+offset_num):
+        data = {'sid': ii}
+        img = create_img(data)
 
-tmp_file = tempfile.NamedTemporaryFile(suffix='.pdf', delete=False).name
-# mpdf.add_image(r'C:\Users\mpeter\Desktop\avery.pdf')
-# mpdf.add_image(r'C:\Users\mpeter\Desktop\b.pdf')
-first_run=True
-offset_num = 18187
-for ii in range(0+offset_num, 80+offset_num):
-    data = {'sid': ii}
-    img = create_img(data)
+        img.save(tmp_file, 'PDF', resolution=200)
 
-    img.save(tmp_file, 'PDF', resolution=200)
-
-    im_list.append(img)
-    im_files.append(tmp_file)
-    mpdf.add_image(tmp_file)
-    if first_run:
-        mpdf.num_labels_placed=0
+        im_list.append(img)
+        im_files.append(tmp_file)
         mpdf.add_image(tmp_file)
-        first_run=False
+        if first_run:
+            mpdf.num_labels_placed=0
+            mpdf.add_image(tmp_file)
+            first_run=False
 
 
-mpdf.out_file=r'C:\Users\mpeter\Desktop\test.pdf'
-mpdf.write_pdf()
+    mpdf.out_file=r'C:\Users\Manuel\Desktop\test.pdf'
+    mpdf.write_pdf()

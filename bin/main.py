@@ -18,7 +18,7 @@ cfg = {'path_imconvert': r'D:\cygwin\bin\convert.exe',
        'path_qpdf': r'C:\Users\Manuel\Documents\FolderTools\lib\qpdf-8.1.0\bin\qpdf.exe'
       }
 # Notebook
-if os.path.exists(r'C:\PortableApps'):
+if os.path.exists(r'C:\PortableApps') and not os.path.exists(cfg['path_qpdf']):
     cfg = {'path_imconvert': r'C:\PortableApps\cygwinx86\bin\convert.exe',
            'path_qpdf': r'C:\PortableApps\cygwinx86\bin\qpdf.exe'
           }
